@@ -44,3 +44,6 @@ task buildSpringServer(type: org.openapitools.generator.gradle.plugin.tasks.Gene
 
 //下記設定により、コンパイルされる前にbuildSpringServerでコード生成してからコンパイルされるよう設定
 compileJava.dependsOn tasks.buildSpringServer
+
+//下記設定により、openapi Generatorで生成したbuild配下のコードをimportできるようになる
+sourceSets.main.java.srcDir "$buildDir/spring/src/main/java"
