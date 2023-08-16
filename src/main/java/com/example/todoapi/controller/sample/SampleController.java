@@ -1,5 +1,6 @@
 package com.example.todoapi.controller.sample;
 
+import com.example.todoapi.service.sample.SampleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +14,12 @@ import java.time.LocalDateTime;
 @RequestMapping("/samples")
 public class SampleController {
 
+    private final SampleService service = new SampleService();
+
     @GetMapping
     public SampleDto index() {
+        var entity = service.find();
         //spring bootプロジェクト内のjacksonというライブラリがJavaオブジェクトを自動的にJSONに変換してくれる
-        return new SampleDto("OK", LocalDateTime.now());
+        return new SampleDto(entity.getContent(), LocalDateTime.now());
     }
 }
