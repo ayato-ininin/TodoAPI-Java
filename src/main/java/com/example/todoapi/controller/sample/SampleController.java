@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @RequestMapping("/samples")
 public class SampleController {
 
+    //finalをつけることで、初期化後に値を変更できないようにする
+    //new SampleService()とすることで、SampleServiceクラスのインスタンスを生成しているので、DIしていない。
     private final SampleService service = new SampleService();
 
     @GetMapping
