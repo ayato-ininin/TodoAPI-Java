@@ -16,12 +16,20 @@ paths:
       responses:
         '200':
           description: OK
-  /tasks/1:
+  /tasks/{taskId}:
     get:
       tags:
           - tasks
       # operationIdはメソッド名になる
       operationId: showTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "詳細取得するためのタスクID"
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
