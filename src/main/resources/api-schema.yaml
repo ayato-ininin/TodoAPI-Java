@@ -39,6 +39,10 @@ paths:
                 $ref: '#/components/schemas/TaskDTO'
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
 components:
   schemas:
     TaskDTO:
@@ -55,3 +59,17 @@ components:
       required:
         - id
         - title
+    ResourceNotFoundError:
+      type: object
+      description: "指定したリソースが存在しない"
+      properties:
+        title:
+            type: string
+            description: "エラータイトル"
+            default: "Resource Not Found"
+        detail:
+            type: string
+            description: "エラー詳細"
+      required:
+        - title
+        - detail
