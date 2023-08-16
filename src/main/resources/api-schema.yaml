@@ -20,6 +20,8 @@ paths:
     get:
       tags:
           - tasks
+      # operationIdはメソッド名になる
+      operationId: showTask
       responses:
         '200':
           description: OK
