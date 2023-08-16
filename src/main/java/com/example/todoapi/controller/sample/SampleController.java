@@ -16,7 +16,15 @@ public class SampleController {
 
     //finalをつけることで、初期化後に値を変更できないようにする
     //new SampleService()とすることで、SampleServiceクラスのインスタンスを生成しているので、DIしていない。
-    private final SampleService service = new SampleService();
+    //これは、内部でインスタンス生成しているので、SampleServiceに依存している。
+    //依存性の注入も結果依存ではあるが、外部でインスタンスを生成しているのが違いであり、
+    //この場合、SampleServiceか何かしらの型のものであれば、モックサービスでも入れやすくなり、そのサービス自体とは疎結合になる
+    //ここでインスタンス生成するとそのサービス一つに依存するが、注入だとその型を持つものに依存するので特定のものに依存しない。
+    //    private final SampleService service = new SampleService();
+    private final SampleService service;
+    public SampleController(SampleService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public SampleDto index() {
