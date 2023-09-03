@@ -1,5 +1,6 @@
 package com.example.todoapi.service.task;
 
+import com.example.todoapi.repository.task.TaskRecord;
 import com.example.todoapi.repository.task.TaskRepository;
 import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class TaskService {
     }
 
     public TaskEntity create(String title) {
-        return new TaskEntity(99L, title);
+        var record = new TaskRecord(null, title);
+        taskRepository.insert(record);
+        return new TaskEntity(record.getId(), record.getTitle());
     }
 }
