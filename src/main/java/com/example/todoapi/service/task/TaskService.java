@@ -37,6 +37,7 @@ public class TaskService {
 
     public TaskEntity update(Long taskId, String title) {
         // 更新する前に存在チェックを行う(なければ、not foundExceptionを投げる)
+        // 更新する前に存在チェックを行う(なければ、not foundExceptionを投げる)
         taskRepository.select(taskId)
                 .orElseThrow(() -> new TaskEntityNotFoundException(taskId));
         taskRepository.update(new TaskRecord(taskId, title));
@@ -44,6 +45,10 @@ public class TaskService {
     }
 
     public void delete(Long taskId) {
+        // 削除する前に存在チェックを行う(なければ、not foundExceptionを投げる)
+        // Optional#orElseThrowは、Optionalが空の場合に引数で指定した例外を投げる
+        taskRepository.select(taskId)
+                .orElseThrow(() -> new TaskEntityNotFoundException(taskId));
         taskRepository.delete(taskId);
     }
 }
