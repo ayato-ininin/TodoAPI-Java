@@ -26,6 +26,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListDTO'
     post:
       summary: "タスク作成"
       description: "タスクを作成する"
@@ -111,6 +115,16 @@ components:
       required:
         - id
         - title
+    TaskListDTO:
+      description: "タスク一覧"
+      type : object
+      properties:
+          results:
+            type: array
+            items:
+                $ref: '#/components/schemas/TaskDTO'
+      required:
+        - results
     ResourceNotFoundError:
       type: object
       description: "指定したリソースが存在しない"
