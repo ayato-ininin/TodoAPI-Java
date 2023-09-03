@@ -23,6 +23,26 @@ paths:
       tags:
         - tasks
       operationId: listTasks
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          description: "取得するタスクの最大数"
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: offset
+          in: query
+          required: true
+          description: "取得するタスクのオフセット"
+          schema:
+              type: integer
+              format: int64
+              minimum: 0
+              default: 0
       responses:
         '200':
           description: OK
