@@ -4,6 +4,7 @@ import com.example.todoapi.model.BadRequestError;
 import com.example.todoapi.model.InvalidParam;
 import com.example.todoapi.model.ResourceNotFoundError;
 import com.example.todoapi.service.task.TaskEntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ElementKind;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -53,20 +55,26 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public  ResponseEntity<BadRequestError> handleConstraintViolationException(
             ConstraintViolationException ex
     ) {
-        var invalidParamList = ex.getConstraintViolations()
-                .stream()
-                .map(violation -> {
-                    var parameterOpt = StreamSupport.stream(violation.getPropertyPath().spliterator(),false)
-                            .filter(node -> node.getKind().equals(ElementKind.PARAMETER))
-                            .findFirst();
-                    var invalidParam = new InvalidParam();
-                    parameterOpt.ifPresent(parameter -> invalidParam.setName(parameter.getName()));
-                    invalidParam.setReason(violation.getMessage());
-                    return invalidParam;
-                })
-                .collect(Collectors.toList());
+        var invalidParamList = createInvalidParamList(ex);
         var error = new BadRequestError();
         error.setInvalidParams(invalidParamList);
         return ResponseEntity.badRequest().body(error);
+    }
+
+    private static List<InvalidParam> createInvalidParamList(ConstraintViolationException ex) {
+        return ex.getConstraintViolations()
+                .stream()
+                .map(CustomExceptionHandler::createInvalidParam)
+                .collect(Collectors.toList());
+    }
+
+    private static InvalidParam createInvalidParam(ConstraintViolation<?> violation) {
+        var parameterOpt = StreamSupport.stream(violation.getPropertyPath().spliterator(),false)
+                .filter(node -> node.getKind().equals(ElementKind.PARAMETER))
+                .findFirst();
+        var invalidParam = new InvalidParam();
+        parameterOpt.ifPresent(parameter -> invalidParam.setName(parameter.getName()));
+        invalidParam.setReason(violation.getMessage());
+        return invalidParam;
     }
 }
