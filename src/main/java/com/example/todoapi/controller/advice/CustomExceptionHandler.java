@@ -1,8 +1,11 @@
 package com.example.todoapi.controller.advice;
 
 import com.example.todoapi.model.BadRequestError;
+import com.example.todoapi.model.InvalidParam;
 import com.example.todoapi.model.ResourceNotFoundError;
 import com.example.todoapi.service.task.TaskEntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ElementKind;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -12,6 +15,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 // 下記は、途中でエラーを差し込むためのクラス
 // これを定義するだけでエラーをキャッチして、ここからレスポンスを返却できる
@@ -31,13 +37,36 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     // POSTメソッドで引数が不正な場合、handleMethodArgumentNotValidが呼ばれるため、
     // ここでエラーをキャッチして、独自のエラーレスポンスを返却する
     @Override
-    protected org.springframework.http.ResponseEntity<Object> handleMethodArgumentNotValid(
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatusCode status,
             WebRequest request
     ) {
         var error = BadRequestErrorCreator.from(ex);
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    // タスク一覧取得APIでlimitやoffsetに不正な値が入っていた場合、
+    // ConstraintViolationExceptionの例外になるのでキャッチして、独自のエラーレスポンスを返却する
+    @ExceptionHandler(ConstraintViolationException.class)
+    public  ResponseEntity<BadRequestError> handleConstraintViolationException(
+            ConstraintViolationException ex
+    ) {
+        var invalidParamList = ex.getConstraintViolations()
+                .stream()
+                .map(violation -> {
+                    var parameterOpt = StreamSupport.stream(violation.getPropertyPath().spliterator(),false)
+                            .filter(node -> node.getKind().equals(ElementKind.PARAMETER))
+                            .findFirst();
+                    var invalidParam = new InvalidParam();
+                    parameterOpt.ifPresent(parameter -> invalidParam.setName(parameter.getName()));
+                    invalidParam.setReason(violation.getMessage());
+                    return invalidParam;
+                })
+                .collect(Collectors.toList());
+        var error = new BadRequestError();
+        error.setInvalidParams(invalidParamList);
         return ResponseEntity.badRequest().body(error);
     }
 }
