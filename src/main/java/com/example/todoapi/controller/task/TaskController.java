@@ -4,6 +4,7 @@ import com.example.todoapi.controller.TasksApi;
 import com.example.todoapi.model.TaskDTO;
 import com.example.todoapi.model.TaskForm;
 import com.example.todoapi.model.TaskListDTO;
+import com.example.todoapi.service.task.TaskEntity;
 import com.example.todoapi.service.task.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,18 +24,14 @@ public class TaskController implements TasksApi {
     @Override
     public ResponseEntity<TaskDTO> showTask(Long taskId) {
         var entity = taskService.find(taskId);
-        var dto = new TaskDTO();
-        dto.setId(entity.getId());
-        dto.setTitle(entity.getTitle());
+        var dto = toTaskDto(entity);
         return ResponseEntity.ok(dto);
     }
 
     @Override
     public ResponseEntity<TaskDTO> createTask(TaskForm taskForm) {
         var entity = taskService.create(taskForm.getTitle());
-        var dto = new TaskDTO();
-        dto.setId(entity.getId());
-        dto.setTitle(entity.getTitle());
+        var dto = toTaskDto(entity);
         return ResponseEntity
                 .created(URI.create("/tasks/" + dto.getId()))
                 .body(dto);
@@ -44,15 +41,18 @@ public class TaskController implements TasksApi {
     public ResponseEntity<TaskListDTO> listTasks() {
         var entityList = taskService.find();
         var dtoList = entityList.stream()
-                .map(taskEntity -> {
-                    var dto = new TaskDTO();
-                    dto.setId(taskEntity.getId());
-                    dto.setTitle(taskEntity.getTitle());
-                    return dto;
-                })
+                .map(TaskController::toTaskDto)
                 .collect(Collectors.toList());
         var dto = new TaskListDTO();
         dto.setResults(dtoList);
         return ResponseEntity.ok(dto);
+    }
+
+    // ここで、サービスから受け取ったTaskEntityを出力用のTaskDTOに変換している
+    private static TaskDTO toTaskDto(TaskEntity taskEntity) {
+        var dto = new TaskDTO();
+        dto.setId(taskEntity.getId());
+        dto.setTitle(taskEntity.getTitle());
+        return dto;
     }
 }
