@@ -24,4 +24,7 @@ public interface TaskRepository {
     // 更新後の値は別途取得する必要がある
     @Update("UPDATE tasks SET title = #{title} WHERE id = #{id}")
     void update(TaskRecord taskRecord);
+
+    @Delete("DELETE FROM tasks WHERE id = #{taskId}")
+    void delete(Long taskId);
 }
