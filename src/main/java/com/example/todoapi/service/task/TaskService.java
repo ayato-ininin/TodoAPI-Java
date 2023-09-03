@@ -2,8 +2,9 @@ package com.example.todoapi.service.task;
 
 import com.example.todoapi.repository.task.TaskRecord;
 import com.example.todoapi.repository.task.TaskRepository;
-import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TaskService {
@@ -18,6 +19,10 @@ public class TaskService {
         return taskRepository.select(taskId)
                 .map(record -> new TaskEntity(record.getId(), record.getTitle()))
                 .orElseThrow(() -> new TaskEntityNotFoundException(taskId));
+    }
+
+    public List<TaskEntity> find() {
+        return List.of(new TaskEntity(1, "title1"), new TaskEntity(2, "title2"));
     }
 
     public TaskEntity create(String title) {
