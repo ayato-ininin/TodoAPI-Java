@@ -5,6 +5,7 @@ import com.example.todoapi.repository.task.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -22,7 +23,10 @@ public class TaskService {
     }
 
     public List<TaskEntity> find() {
-        return List.of(new TaskEntity(1, "title1"), new TaskEntity(2, "title2"));
+        return taskRepository.selectList()
+                .stream()
+                .map(record -> new TaskEntity(record.getId(), record.getTitle()))
+                .collect(Collectors.toList());
     }
 
     public TaskEntity create(String title) {
