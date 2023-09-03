@@ -17,6 +17,15 @@ paths:
         '200':
           description: OK
   /tasks/:
+    get:
+      summary: "タスク一覧取得"
+      description: "タスク一覧を取得する"
+      tags:
+        - tasks
+      operationId: listTasks
+      responses:
+        '200':
+          description: OK
     post:
       summary: "タスク作成"
       description: "タスクを作成する"
