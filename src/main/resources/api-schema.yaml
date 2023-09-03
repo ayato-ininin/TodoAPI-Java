@@ -135,14 +135,36 @@ components:
       required:
         - id
         - title
+    PageDto:
+      description: "ページング情報"
+      type: object
+      properties:
+          limit:
+            description: "リクエストされたlimit"
+            type: integer
+            format: int32
+          offset:
+            description: "リクエストされたoffset"
+            type: integer
+            format: int64
+          size:
+            description: "取得された件数"
+            type: integer
+            format: int32
+      required:
+        - limit
+        - offset
+        - size
     TaskListDTO:
       description: "タスク一覧"
       type : object
       properties:
-          results:
-            type: array
-            items:
-                $ref: '#/components/schemas/TaskDTO'
+        page:
+          $ref: '#/components/schemas/PageDto'
+        results:
+          type: array
+          items:
+              $ref: '#/components/schemas/TaskDTO'
       required:
         - results
     ResourceNotFoundError:
