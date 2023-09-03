@@ -3,11 +3,13 @@ package com.example.todoapi.controller.task;
 import com.example.todoapi.controller.TasksApi;
 import com.example.todoapi.model.TaskDTO;
 import com.example.todoapi.model.TaskForm;
+import com.example.todoapi.model.TaskListDTO;
 import com.example.todoapi.service.task.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 public class TaskController implements TasksApi {
@@ -39,7 +41,9 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<Void> listTasks() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TaskListDTO> listTasks() {
+        var dto = new TaskListDTO();
+        dto.setResults(List.of(new TaskDTO(), new TaskDTO()));
+        return ResponseEntity.ok(dto);
     }
 }
