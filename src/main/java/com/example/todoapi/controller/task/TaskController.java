@@ -2,6 +2,7 @@ package com.example.todoapi.controller.task;
 
 import com.example.todoapi.controller.TasksApi;
 import com.example.todoapi.model.TaskDTO;
+import com.example.todoapi.model.TaskForm;
 import com.example.todoapi.service.task.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,10 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<TaskDTO> createTask() {
+    public ResponseEntity<TaskDTO> createTask(TaskForm taskForm) {
         var dto = new TaskDTO();
         dto.setId(99L);
-        dto.setTitle("test");
+        dto.setTitle(taskForm.getTitle());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(dto);
