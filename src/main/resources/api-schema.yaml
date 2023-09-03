@@ -84,6 +84,8 @@ components:
         title:
           type: string
           description: "タスクタイトル"
+          maxLength: 256
+          minLength: 1
       required:
         - title
     TaskDTO:
