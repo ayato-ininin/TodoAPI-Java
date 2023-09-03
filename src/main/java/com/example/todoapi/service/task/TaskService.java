@@ -2,6 +2,7 @@ package com.example.todoapi.service.task;
 
 import com.example.todoapi.repository.task.TaskRecord;
 import com.example.todoapi.repository.task.TaskRepository;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,5 +34,10 @@ public class TaskService {
         var record = new TaskRecord(null, title);
         taskRepository.insert(record);
         return new TaskEntity(record.getId(), record.getTitle());
+    }
+
+    public TaskEntity update(Long taskId, String title) {
+        taskRepository.update(new TaskRecord(taskId, title));
+        return find(taskId);
     }
 }

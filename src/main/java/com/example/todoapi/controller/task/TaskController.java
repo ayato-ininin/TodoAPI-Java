@@ -56,8 +56,10 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<Void> editTask(Long taskId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<TaskDTO> editTask(Long taskId, TaskForm taskForm) {
+        var entity = taskService.update(taskId, taskForm.getTitle());
+        var dto = toTaskDto(entity);
+        return ResponseEntity.ok(dto);
     }
 
     // ここで、サービスから受け取ったTaskEntityを出力用のTaskDTOに変換している
