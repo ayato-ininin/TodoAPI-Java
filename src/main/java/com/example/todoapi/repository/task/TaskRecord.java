@@ -2,15 +2,18 @@ package com.example.todoapi.repository.task;
 
 public class TaskRecord {
 
-    private long id;
+    // longとLongの違い
+    // longはプリミティブ型で、nullを許容しない、64bitの整数型
+    // Longはラッパークラスで、nullを許容する、64bitの整数型
+    private Long id;
     private String title;
 
-    public TaskRecord(long id, String title) {
+    public TaskRecord(Long id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
