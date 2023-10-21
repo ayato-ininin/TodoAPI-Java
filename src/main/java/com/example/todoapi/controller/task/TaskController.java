@@ -7,6 +7,9 @@ import com.example.todoapi.model.TaskForm;
 import com.example.todoapi.model.TaskListDTO;
 import com.example.todoapi.service.task.TaskEntity;
 import com.example.todoapi.service.task.TaskService;
+import com.example.todoapi.usecase.task.create.TaskCreateInputData;
+import com.example.todoapi.usecase.task.create.TaskCreateUseCase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,9 +20,15 @@ import java.util.stream.Collectors;
 public class TaskController implements TasksApi {
 
     private final TaskService taskService;
+    private final TaskCreateUseCase taskCreateUseCase;
 
-    public TaskController(TaskService taskService) {
+    @Autowired
+    public TaskController(
+            TaskService taskService,
+            TaskCreateUseCase taskCreateUseCase
+    ) {
         this.taskService = taskService;
+        this.taskCreateUseCase = taskCreateUseCase;
     }
 
     @Override
@@ -31,10 +40,13 @@ public class TaskController implements TasksApi {
 
     @Override
     public ResponseEntity<TaskDTO> createTask(TaskForm taskForm) {
-        var entity = taskService.create(taskForm.getTitle());
-        var dto = toTaskDto(entity);
+        TaskCreateInputData inputData = new TaskCreateInputData(taskForm.getTitle());
+        var outputData = taskCreateUseCase.handle(inputData);
+        var dto = new TaskDTO();
+        dto.setId(outputData.getId());
+        dto.setTitle(outputData.getTitle());
         return ResponseEntity
-                .created(URI.create("/tasks/" + dto.getId()))
+                .created(URI.create("/tasks/" + outputData.getId()))
                 .body(dto);
     }
 
