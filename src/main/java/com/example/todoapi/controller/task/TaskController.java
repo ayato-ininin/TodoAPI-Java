@@ -13,6 +13,8 @@ import com.example.todoapi.usecase.task.getDetail.TaskGetDetailInputData;
 import com.example.todoapi.usecase.task.getDetail.TaskGetDetailUseCase;
 import com.example.todoapi.usecase.task.getList.TaskGetListInputData;
 import com.example.todoapi.usecase.task.getList.TaskGetListUseCase;
+import com.example.todoapi.usecase.task.update.TaskUpdateInputData;
+import com.example.todoapi.usecase.task.update.TaskUpdateUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,18 +29,21 @@ public class TaskController implements TasksApi {
     private final TaskCreateUseCase taskCreateUseCase;
     private final TaskGetListUseCase taskGetListUseCase;
     private final TaskGetDetailUseCase taskGetDetailUseCase;
+    private final TaskUpdateUseCase taskUpdateUseCase;
 
     @Autowired
     public TaskController(
             TaskService taskService,
             TaskCreateUseCase taskCreateUseCase,
             TaskGetListUseCase taskGetListUseCase,
-            TaskGetDetailUseCase taskGetDetailUseCase
+            TaskGetDetailUseCase taskGetDetailUseCase,
+            TaskUpdateUseCase taskUpdateUseCase
     ) {
         this.taskService = taskService;
         this.taskCreateUseCase = taskCreateUseCase;
         this.taskGetListUseCase = taskGetListUseCase;
         this.taskGetDetailUseCase = taskGetDetailUseCase;
+        this.taskUpdateUseCase = taskUpdateUseCase;
     }
 
     @Override
@@ -84,8 +89,12 @@ public class TaskController implements TasksApi {
 
     @Override
     public ResponseEntity<TaskDTO> update(Long taskId, TaskForm taskForm) {
-        var entity = taskService.update(taskId, taskForm.getTitle());
-        var dto = toTaskDto(entity);
+        TaskUpdateInputData inputData = new TaskUpdateInputData(taskId, taskForm.getTitle());
+        var outputData = taskUpdateUseCase.handle(inputData);
+        var dto = genTaskDto(
+                outputData.getTaskData().getId(),
+                outputData.getTaskData().getTitle()
+        );
         return ResponseEntity.ok(dto);
     }
 

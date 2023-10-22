@@ -1,39 +1,58 @@
 package com.example.todoapi.gateways.task;
 
 import com.example.todoapi.domain.model.task.TaskEntity;
+import com.example.todoapi.domain.model.task.TaskId;
 import com.example.todoapi.domain.model.task.TaskRepository;
+import com.example.todoapi.domain.model.task.TaskTitle;
 import com.example.todoapi.models.Task;
-import com.example.todoapi.repository.task.TaskRecord;
-import org.apache.ibatis.annotations.*;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 //↓DIするためのアノテーション(bean登録)
-//Mapperやから、models/Taskのクラスに変換せずアクセスをしているが、
-//基本的には、models/Taskのクラスに変換してからDBとのやり取りをする
-@Mapper
+@Service
 @Profile("prod")
-public interface EBeanTaskRepository extends TaskRepository {
+public class EBeanTaskRepository implements TaskRepository {
+    private final EBeanTaskMybatis eBeanTaskMybatis;
 
-    @Select("SELECT id, title FROM tasks WHERE id = #{taskId}")
-    Optional<Task> select(long taskId);
+    public EBeanTaskRepository(EBeanTaskMybatis eBeanTaskMybatis) {
+        this.eBeanTaskMybatis = eBeanTaskMybatis;
+    }
 
-    @Select("SELECT id, title FROM tasks LIMIT #{limit} OFFSET #{offset}")
-    List<Task> selectList(int limit, long offset);
+    public Optional<TaskEntity> find(long taskId) {
+        Optional<Task> task = eBeanTaskMybatis.find(taskId);
 
-    // optionsで自動採番したIDを取得、セットできる
-    // mybatisの制限で更新後の値を取得できないので、voidになってしまう
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO tasks (title) VALUES (#{title.value})")
-    void insert(TaskEntity taskEntity);
+        if(task.isPresent()) {
+            TaskEntity taskEntity = convert(task.get());
+            return Optional.of(taskEntity);
+        }else{
+            return Optional.empty();
+        }
+    }
 
-    // mybatisの制限で更新後の値を取得できないので、voidになってしまう
-    // 更新後の値は別途取得する必要がある
-    @Update("UPDATE tasks SET title = #{title} WHERE id = #{id}")
-    void update(TaskRecord taskRecord);
+    public List<TaskEntity> findAll(int limit, long offset) {
+        List<Task> tasks = eBeanTaskMybatis.findAll(limit, offset);
+        return tasks.stream()
+                .map(this::convert)
+                .toList();
+    }
 
-    @Delete("DELETE FROM tasks WHERE id = #{taskId}")
-    void delete(Long taskId);
+    public void insert(TaskEntity taskEntity) {
+       eBeanTaskMybatis.insert(taskEntity);
+    }
+
+    public void update(TaskEntity taskEntity) {
+       eBeanTaskMybatis.update(taskEntity);
+    }
+
+    public void delete(Long taskId){};
+
+    private TaskEntity convert(Task task) {
+        return new TaskEntity(
+                new TaskId(task.getId()),
+                new TaskTitle(task.getTitle())
+        );
+    }
 }

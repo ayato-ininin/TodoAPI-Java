@@ -20,4 +20,8 @@ public class TaskEntity {
     public TaskTitle getTitle() {
         return title;
     }
+
+    public void changeTitle(TaskTitle title) {
+        this.title = title;
+    }
 }

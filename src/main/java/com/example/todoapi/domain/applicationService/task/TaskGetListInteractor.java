@@ -1,7 +1,7 @@
 package com.example.todoapi.domain.applicationService.task;
 
+import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.domain.model.task.TaskRepository;
-import com.example.todoapi.models.Task;
 import com.example.todoapi.usecase.task.common.TaskData;
 import com.example.todoapi.usecase.task.getList.TaskGetListInputData;
 import com.example.todoapi.usecase.task.getList.TaskGetListOutputData;
@@ -26,10 +26,12 @@ public class TaskGetListInteractor implements TaskGetListUseCase {
     }
     @Override
     public TaskGetListOutputData handle(TaskGetListInputData inputData) {
-        List<Task> tasks = taskRepository.selectList(inputData.getLimit(), inputData.getOffset());
+        List<TaskEntity> tasks = taskRepository.findAll(inputData.getLimit(), inputData.getOffset());
         List<TaskData> taskData = tasks.stream()
-                .map(task -> new TaskData(task.getId(), task.getTitle()))
-                .collect(Collectors.toList());
+                .map(t -> new TaskData(
+                        t.getId().getValue(),
+                        t.getTitle().getValue())
+                ).collect(Collectors.toList());
         return new TaskGetListOutputData(taskData);
     }
 }
