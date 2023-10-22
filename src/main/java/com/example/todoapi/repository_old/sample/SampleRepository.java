@@ -1,4 +1,4 @@
-package com.example.todoapi.repository.sample;
+package com.example.todoapi.repository_old.sample;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;

@@ -1,6 +1,6 @@
 package com.example.todoapi.controller.sample;
 
-import com.example.todoapi.service.sample.SampleService;
+import com.example.todoapi.service.sample_old.SampleService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

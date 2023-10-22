@@ -1,7 +1,5 @@
 package com.example.todoapi.domain.model.task;
 
-import com.example.todoapi.repository.task.TaskRecord;
-
 import java.util.List;
 import java.util.Optional;
 

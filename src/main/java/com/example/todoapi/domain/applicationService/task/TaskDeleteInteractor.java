@@ -1,7 +1,7 @@
 package com.example.todoapi.domain.applicationService.task;
 
+import com.example.todoapi.domain.applicationService.task.common.TaskEntityNotFoundException;
 import com.example.todoapi.domain.model.task.TaskRepository;
-import com.example.todoapi.service.task.TaskEntityNotFoundException;
 import com.example.todoapi.usecase.task.delete.TaskDeleteInputData;
 import com.example.todoapi.usecase.task.delete.TaskDeleteOutputData;
 import com.example.todoapi.usecase.task.delete.TaskDeleteUseCase;

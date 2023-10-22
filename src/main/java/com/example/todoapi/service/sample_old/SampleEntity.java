@@ -1,10 +1,10 @@
-package com.example.todoapi.repository.sample;
+package com.example.todoapi.service.sample_old;
 
-public class SampleRecord {
+public class SampleEntity {
 
     private String content;
 
-    public SampleRecord(String content) {
+    public SampleEntity(String content) {
         this.content = content;
     }
 

@@ -1,9 +1,9 @@
 package com.example.todoapi.controller.advice;
 
+import com.example.todoapi.domain.applicationService.task.common.TaskEntityNotFoundException;
 import com.example.todoapi.model.BadRequestError;
 import com.example.todoapi.model.InvalidParam;
 import com.example.todoapi.model.ResourceNotFoundError;
-import com.example.todoapi.service.task.TaskEntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ElementKind;

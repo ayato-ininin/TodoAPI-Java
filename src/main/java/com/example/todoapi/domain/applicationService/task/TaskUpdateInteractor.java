@@ -1,9 +1,9 @@
 package com.example.todoapi.domain.applicationService.task;
 
+import com.example.todoapi.domain.applicationService.task.common.TaskEntityNotFoundException;
 import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.domain.model.task.TaskRepository;
 import com.example.todoapi.domain.model.task.TaskTitle;
-import com.example.todoapi.service.task.TaskEntityNotFoundException;
 import com.example.todoapi.usecase.task.common.TaskData;
 import com.example.todoapi.usecase.task.update.TaskUpdateInputData;
 import com.example.todoapi.usecase.task.update.TaskUpdateOutputData;
@@ -11,8 +11,6 @@ import com.example.todoapi.usecase.task.update.TaskUpdateUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 //↓DIするためのアノテーション(bean登録)
 @Service

@@ -1,6 +1,6 @@
-package com.example.todoapi.service.sample;
+package com.example.todoapi.service.sample_old;
 
-import com.example.todoapi.repository.sample.SampleRepository;
+import com.example.todoapi.repository_old.sample.SampleRepository;
 import org.springframework.stereotype.Service;
 
 //↓DIするためのアノテーション(bean登録)

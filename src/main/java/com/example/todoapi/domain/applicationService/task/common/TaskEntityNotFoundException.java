@@ -1,4 +1,4 @@
-package com.example.todoapi.service.task;
+package com.example.todoapi.domain.applicationService.task.common;
 
 public class TaskEntityNotFoundException extends RuntimeException{
 
