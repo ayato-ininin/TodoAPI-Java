@@ -47,7 +47,9 @@ public class EBeanTaskRepository implements TaskRepository {
        eBeanTaskMybatis.update(taskEntity);
     }
 
-    public void delete(Long taskId){};
+    public void delete(Long taskId){
+        eBeanTaskMybatis.delete(taskId);
+    };
 
     private TaskEntity convert(Task task) {
         return new TaskEntity(

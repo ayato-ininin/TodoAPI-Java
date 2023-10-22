@@ -9,6 +9,8 @@ import com.example.todoapi.service.task.TaskEntity;
 import com.example.todoapi.service.task.TaskService;
 import com.example.todoapi.usecase.task.create.TaskCreateInputData;
 import com.example.todoapi.usecase.task.create.TaskCreateUseCase;
+import com.example.todoapi.usecase.task.delete.TaskDeleteInputData;
+import com.example.todoapi.usecase.task.delete.TaskDeleteUseCase;
 import com.example.todoapi.usecase.task.getDetail.TaskGetDetailInputData;
 import com.example.todoapi.usecase.task.getDetail.TaskGetDetailUseCase;
 import com.example.todoapi.usecase.task.getList.TaskGetListInputData;
@@ -30,6 +32,7 @@ public class TaskController implements TasksApi {
     private final TaskGetListUseCase taskGetListUseCase;
     private final TaskGetDetailUseCase taskGetDetailUseCase;
     private final TaskUpdateUseCase taskUpdateUseCase;
+    private final TaskDeleteUseCase taskDeleteUseCase;
 
     @Autowired
     public TaskController(
@@ -37,13 +40,15 @@ public class TaskController implements TasksApi {
             TaskCreateUseCase taskCreateUseCase,
             TaskGetListUseCase taskGetListUseCase,
             TaskGetDetailUseCase taskGetDetailUseCase,
-            TaskUpdateUseCase taskUpdateUseCase
+            TaskUpdateUseCase taskUpdateUseCase,
+            TaskDeleteUseCase taskDeleteUseCase
     ) {
         this.taskService = taskService;
         this.taskCreateUseCase = taskCreateUseCase;
         this.taskGetListUseCase = taskGetListUseCase;
         this.taskGetDetailUseCase = taskGetDetailUseCase;
         this.taskUpdateUseCase = taskUpdateUseCase;
+        this.taskDeleteUseCase = taskDeleteUseCase;
     }
 
     @Override
@@ -100,7 +105,8 @@ public class TaskController implements TasksApi {
 
     @Override
     public ResponseEntity<Void> delete(Long taskId) {
-        taskService.delete(taskId);
+        TaskDeleteInputData inputData = new TaskDeleteInputData(taskId);
+        taskDeleteUseCase.handle(inputData);
         return ResponseEntity.noContent().build();
     }
 
