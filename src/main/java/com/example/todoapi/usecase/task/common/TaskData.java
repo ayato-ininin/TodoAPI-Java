@@ -1,15 +1,14 @@
-package com.example.todoapi.models;
+package com.example.todoapi.usecase.task.common;
 
-// DB保存用のEntity
-// ORMには使用していない
-public class Task {
+public class TaskData {
     private long id;
     private String title;
 
-    public Task(long id, String title) {
+    public TaskData(long id, String title) {
         this.id = id;
         this.title = title;
     }
+    private TaskData() {}
 
     public long getId() {
         return id;
@@ -17,5 +16,6 @@ public class Task {
 
     public String getTitle() {
         return title;
+
     }
 }

@@ -2,13 +2,13 @@ package com.example.todoapi.domain.model.task;
 
 // 値オブジェクト
 public class TaskId {
-    private Long value;
+    private long value;
 
-    public TaskId(Long value) {
+    public TaskId(long value) {
         this.value = value;
     }
 
-    public Long getValue() {
+    public long getValue() {
         return value;
     }
 }

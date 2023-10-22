@@ -1,7 +1,8 @@
 package com.example.todoapi.gateways.task;
 
-import com.example.todoapi.domain.model.task.Task;
+import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.domain.model.task.TaskRepository;
+import com.example.todoapi.models.Task;
 import com.example.todoapi.repository.task.TaskRecord;
 import org.apache.ibatis.annotations.*;
 import org.springframework.context.annotation.Profile;
@@ -20,13 +21,13 @@ public interface EBeanTaskRepository extends TaskRepository {
     Optional<TaskRecord> select(long taskId);
 
     @Select("SELECT id, title FROM tasks LIMIT #{limit} OFFSET #{offset}")
-    List<TaskRecord> selectList(int limit, long offset);
+    List<Task> selectList(int limit, long offset);
 
     // optionsで自動採番したIDを取得、セットできる
     // mybatisの制限で更新後の値を取得できないので、voidになってしまう
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("INSERT INTO tasks (title) VALUES (#{title.value})")
-    void insert(Task task);
+    void insert(TaskEntity taskEntity);
 
     // mybatisの制限で更新後の値を取得できないので、voidになってしまう
     // 更新後の値は別途取得する必要がある

@@ -9,6 +9,8 @@ import com.example.todoapi.service.task.TaskEntity;
 import com.example.todoapi.service.task.TaskService;
 import com.example.todoapi.usecase.task.create.TaskCreateInputData;
 import com.example.todoapi.usecase.task.create.TaskCreateUseCase;
+import com.example.todoapi.usecase.task.getList.TaskGetListInputData;
+import com.example.todoapi.usecase.task.getList.TaskGetListUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,14 +23,17 @@ public class TaskController implements TasksApi {
 
     private final TaskService taskService;
     private final TaskCreateUseCase taskCreateUseCase;
+    private final TaskGetListUseCase taskGetListUseCase;
 
     @Autowired
     public TaskController(
             TaskService taskService,
-            TaskCreateUseCase taskCreateUseCase
+            TaskCreateUseCase taskCreateUseCase,
+            TaskGetListUseCase taskGetListUseCase
     ) {
         this.taskService = taskService;
         this.taskCreateUseCase = taskCreateUseCase;
+        this.taskGetListUseCase = taskGetListUseCase;
     }
 
     @Override
@@ -42,9 +47,7 @@ public class TaskController implements TasksApi {
     public ResponseEntity<TaskDTO> createTask(TaskForm taskForm) {
         TaskCreateInputData inputData = new TaskCreateInputData(taskForm.getTitle());
         var outputData = taskCreateUseCase.handle(inputData);
-        var dto = new TaskDTO();
-        dto.setId(outputData.getId());
-        dto.setTitle(outputData.getTitle());
+        var dto = genTaskDto(outputData.getId(), outputData.getTitle());
         return ResponseEntity
                 .created(URI.create("/tasks/" + outputData.getId()))
                 .body(dto);
@@ -52,9 +55,10 @@ public class TaskController implements TasksApi {
 
     @Override
     public ResponseEntity<TaskListDTO> listTasks(Integer limit, Long offset) {
-        var entityList = taskService.find(limit, offset);
-        var dtoList = entityList.stream()
-                .map(TaskController::toTaskDto)
+        TaskGetListInputData inputData = new TaskGetListInputData(limit, offset);
+        var outputData = taskGetListUseCase.handle(inputData);
+        var dtoList = outputData.getTasks().stream()
+                .map(task -> genTaskDto(task.getId(), task.getTitle()))
                 .collect(Collectors.toList());
         var pageDTO = new PageDto();
         pageDTO.setLimit(limit);
@@ -85,6 +89,13 @@ public class TaskController implements TasksApi {
         var dto = new TaskDTO();
         dto.setId(taskEntity.getId());
         dto.setTitle(taskEntity.getTitle());
+        return dto;
+    }
+
+    private static TaskDTO genTaskDto(long id, String title) {
+        var dto = new TaskDTO();
+        dto.setId(id);
+        dto.setTitle(title);
         return dto;
     }
 }

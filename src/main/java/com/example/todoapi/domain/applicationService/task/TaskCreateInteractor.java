@@ -1,6 +1,6 @@
 package com.example.todoapi.domain.applicationService.task;
 
-import com.example.todoapi.domain.model.task.Task;
+import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.domain.model.task.TaskId;
 import com.example.todoapi.domain.model.task.TaskRepository;
 import com.example.todoapi.domain.model.task.TaskTitle;
@@ -26,7 +26,7 @@ public class TaskCreateInteractor implements TaskCreateUseCase {
    @Override
    public TaskCreateOutputData handle(TaskCreateInputData inputData) {
        Long uuid = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-       var task = new Task(
+       var task = new TaskEntity(
                new TaskId(uuid),
                new TaskTitle(inputData.getTitle())
        );
