@@ -9,6 +9,8 @@ import com.example.todoapi.service.task.TaskEntity;
 import com.example.todoapi.service.task.TaskService;
 import com.example.todoapi.usecase.task.create.TaskCreateInputData;
 import com.example.todoapi.usecase.task.create.TaskCreateUseCase;
+import com.example.todoapi.usecase.task.getDetail.TaskGetDetailInputData;
+import com.example.todoapi.usecase.task.getDetail.TaskGetDetailUseCase;
 import com.example.todoapi.usecase.task.getList.TaskGetListInputData;
 import com.example.todoapi.usecase.task.getList.TaskGetListUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +26,31 @@ public class TaskController implements TasksApi {
     private final TaskService taskService;
     private final TaskCreateUseCase taskCreateUseCase;
     private final TaskGetListUseCase taskGetListUseCase;
+    private final TaskGetDetailUseCase taskGetDetailUseCase;
 
     @Autowired
     public TaskController(
             TaskService taskService,
             TaskCreateUseCase taskCreateUseCase,
-            TaskGetListUseCase taskGetListUseCase
+            TaskGetListUseCase taskGetListUseCase,
+            TaskGetDetailUseCase taskGetDetailUseCase
     ) {
         this.taskService = taskService;
         this.taskCreateUseCase = taskCreateUseCase;
         this.taskGetListUseCase = taskGetListUseCase;
+        this.taskGetDetailUseCase = taskGetDetailUseCase;
     }
 
     @Override
     public ResponseEntity<TaskDTO> showTask(Long taskId) {
-        var entity = taskService.find(taskId);
-        var dto = toTaskDto(entity);
+        TaskGetDetailInputData inputData = new TaskGetDetailInputData(taskId);
+        var outputData = taskGetDetailUseCase.handle(inputData);
+        if (outputData.getTaskData().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var dto = outputData.getTaskData()
+                .map(t -> genTaskDto(t.getId(), t.getTitle()))
+                .get();
         return ResponseEntity.ok(dto);
     }
 

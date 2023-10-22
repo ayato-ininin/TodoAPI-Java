@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface EBeanTaskRepository extends TaskRepository {
 
     @Select("SELECT id, title FROM tasks WHERE id = #{taskId}")
-    Optional<TaskRecord> select(long taskId);
+    Optional<Task> select(long taskId);
 
     @Select("SELECT id, title FROM tasks LIMIT #{limit} OFFSET #{offset}")
     List<Task> selectList(int limit, long offset);

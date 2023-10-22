@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskRepository {
-    Optional<TaskRecord> select(long taskId);
+    Optional<Task> select(long taskId);
 
     List<Task> selectList(int limit, long offset);
     void insert(TaskEntity taskEntity);
