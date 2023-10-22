@@ -22,7 +22,7 @@ paths:
       description: "タスク一覧を取得する"
       tags:
         - tasks
-      operationId: listTasks
+      operationId: "index"
       parameters:
         - name: limit
           in: query
@@ -59,7 +59,7 @@ paths:
     post:
       summary: "タスク作成"
       description: "タスクを作成する"
-      operationId: createTask
+      operationId: "create"
       tags:
         - tasks
       requestBody:
@@ -93,7 +93,7 @@ paths:
       tags:
           - tasks
       # operationIdはメソッド名になる
-      operationId: showTask
+      operationId: "detail"
       parameters:
         - name: taskId
           in: path
@@ -118,7 +118,7 @@ paths:
     put:
       summary: "タスク更新"
       description: "指定されたタスクを更新する"
-      operationId: "editTask"
+      operationId: "update"
       tags:
           - tasks
       parameters:
@@ -158,7 +158,7 @@ paths:
     delete:
       summary: "タスク削除"
       description: "指定されたタスクを削除する"
-      operationId: "deleteTask"
+      operationId: "delete"
       tags:
           - tasks
       parameters:

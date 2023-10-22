@@ -42,7 +42,7 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<TaskDTO> showTask(Long taskId) {
+    public ResponseEntity<TaskDTO> detail(Long taskId) {
         TaskGetDetailInputData inputData = new TaskGetDetailInputData(taskId);
         var outputData = taskGetDetailUseCase.handle(inputData);
         if (outputData.getTaskData().isEmpty()) {
@@ -55,7 +55,7 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<TaskDTO> createTask(TaskForm taskForm) {
+    public ResponseEntity<TaskDTO> create(TaskForm taskForm) {
         TaskCreateInputData inputData = new TaskCreateInputData(taskForm.getTitle());
         var outputData = taskCreateUseCase.handle(inputData);
         var dto = genTaskDto(outputData.getId(), outputData.getTitle());
@@ -65,7 +65,7 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<TaskListDTO> listTasks(Integer limit, Long offset) {
+    public ResponseEntity<TaskListDTO> index(Integer limit, Long offset) {
         TaskGetListInputData inputData = new TaskGetListInputData(limit, offset);
         var outputData = taskGetListUseCase.handle(inputData);
         var dtoList = outputData.getTasks().stream()
@@ -83,14 +83,14 @@ public class TaskController implements TasksApi {
     }
 
     @Override
-    public ResponseEntity<TaskDTO> editTask(Long taskId, TaskForm taskForm) {
+    public ResponseEntity<TaskDTO> update(Long taskId, TaskForm taskForm) {
         var entity = taskService.update(taskId, taskForm.getTitle());
         var dto = toTaskDto(entity);
         return ResponseEntity.ok(dto);
     }
 
     @Override
-    public ResponseEntity<Void> deleteTask(Long taskId) {
+    public ResponseEntity<Void> delete(Long taskId) {
         taskService.delete(taskId);
         return ResponseEntity.noContent().build();
     }
