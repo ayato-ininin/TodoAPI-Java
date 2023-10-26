@@ -8,6 +8,8 @@ tags:
     description: 運用監視関連API
   - name: tasks
     description: タスク関連API
+  - name: users
+    description: ユーザ関連API
 paths:
   /health:
     get:
