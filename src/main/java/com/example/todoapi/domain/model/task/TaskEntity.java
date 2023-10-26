@@ -21,7 +21,11 @@ public class TaskEntity {
         return title;
     }
 
+    // nullを許容しないルール
     public void changeTitle(TaskTitle title) {
+        if (title == null) {
+            throw new IllegalArgumentException("タイトルは必須です");
+        }
         this.title = title;
     }
 }

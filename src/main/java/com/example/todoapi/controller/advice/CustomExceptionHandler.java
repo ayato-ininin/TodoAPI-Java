@@ -77,4 +77,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         invalidParam.setReason(violation.getMessage());
         return invalidParam;
     }
+
+    // 別途エラーDTO追加したほうがいいかも。
+    // エラータイトルも見直し
+    @ExceptionHandler(IllegalArgumentException.class)
+    public  ResponseEntity<BadRequestError> handleIllegalArgumentExceptionException(
+            IllegalArgumentException ex
+    ) {
+        var error = new BadRequestError();
+        error.setDetail(ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
 }
