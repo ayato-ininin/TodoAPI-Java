@@ -179,6 +179,169 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResourceNotFoundError'
+  /users/:
+    get:
+      summary: "ユーザ一覧取得"
+      description: "ユーザ一覧を取得する"
+      tags:
+        - users
+      operationId: "userIndex"
+      parameters:
+        - name: limit
+          in: query
+          required: true
+          description: "取得するユーザの最大数"
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: offset
+          in: query
+          required: true
+          description: "取得するユーザのオフセット"
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+    post:
+      summary: "ユーザ作成"
+      description: "ユーザを作成する"
+      operationId: "userCreate"
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForm'
+      responses:
+        '201':
+          description: "Created"
+          headers:
+            location:
+              description: "作成されたリソースのURL"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: "Bad Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+  /users/{userId}:
+    get:
+      summary: "ユーザ取得"
+      description: "指定されたユーザを取得する"
+      tags:
+        - users
+      # operationIdはメソッド名になる
+      operationId: "userDetail"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "詳細取得するためのユーザID"
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+    put:
+      summary: "ユーザ更新"
+      description: "指定されたユーザを更新する"
+      operationId: "userUpdate"
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "更新するユーザID"
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserForm'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
+    delete:
+      summary: "ユーザ削除"
+      description: "指定されたユーザを削除する"
+      operationId: "userDelete"
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: "削除するユーザID"
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundError'
 components:
   schemas:
     TaskForm:
@@ -235,6 +398,42 @@ components:
           type: array
           items:
               $ref: '#/components/schemas/TaskDTO'
+      required:
+        - results
+    UserForm:
+      type: object
+      properties:
+        name:
+          type: string
+          description: "ユーザ名"
+          maxLength: 256
+          minLength: 1
+      required:
+        - name
+    UserDTO:
+      # レスポンスボディのjson Schema定義
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: "ユーザID"
+        name:
+          type: string
+          description: "ユーザ名"
+      required:
+        - id
+        - name
+    UserListDTO:
+      description: "ユーザ一覧"
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageDto'
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDTO'
       required:
         - results
     ResourceNotFoundError:
