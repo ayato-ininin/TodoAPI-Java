@@ -27,7 +27,7 @@ public interface EBeanUserMybatis {
 
     // mybatisの制限で更新後の値を取得できないので、voidになってしまう
     // 更新後の値は別途取得する必要がある
-    @Update("UPDATE users SET title = #{name.value} WHERE id = #{id.value}")
+    @Update("UPDATE users SET name = #{name.value} WHERE id = #{id.value}")
     void update(UserEntity userEntity);
 
     @Delete("DELETE FROM users WHERE id = #{userId}")

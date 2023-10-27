@@ -2,12 +2,15 @@ package com.example.todoapi.controller.user;
 
 import com.example.todoapi.controller.UsersApi;
 import com.example.todoapi.model.*;
+import com.example.todoapi.usecase.task.update.TaskUpdateInputData;
 import com.example.todoapi.usecase.user.create.UserCreateInputData;
 import com.example.todoapi.usecase.user.create.UserCreateUseCase;
 import com.example.todoapi.usecase.user.getDetail.UserGetDetailInputData;
 import com.example.todoapi.usecase.user.getDetail.UserGetDetailUseCase;
 import com.example.todoapi.usecase.user.getList.UserGetListInputData;
 import com.example.todoapi.usecase.user.getList.UserGetListUseCase;
+import com.example.todoapi.usecase.user.update.UserUpdateInputData;
+import com.example.todoapi.usecase.user.update.UserUpdateUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,15 +23,18 @@ public class UserController implements UsersApi {
     private final UserCreateUseCase userCreateUseCase;
     private final UserGetListUseCase userGetListUseCase;
     private final UserGetDetailUseCase userGetDetailUseCase;
+    private final UserUpdateUseCase userUpdateUseCase;
 
     public UserController(
             UserCreateUseCase userCreateUseCase,
             UserGetListUseCase userGetListUseCase,
-            UserGetDetailUseCase userGetDetailUseCase
+            UserGetDetailUseCase userGetDetailUseCase,
+            UserUpdateUseCase userUpdateUseCase
     ) {
         this.userCreateUseCase = userCreateUseCase;
         this.userGetListUseCase = userGetListUseCase;
         this.userGetDetailUseCase = userGetDetailUseCase;
+        this.userUpdateUseCase = userUpdateUseCase;
     }
 
     @Override
@@ -69,6 +75,17 @@ public class UserController implements UsersApi {
         var dto = new UserListDTO();
         dto.setPage(pageDTO);
         dto.setResults(dtoList);
+        return ResponseEntity.ok(dto);
+    }
+
+    @Override
+    public ResponseEntity<UserDTO> userUpdate(Long userId, UserForm userForm) {
+        UserUpdateInputData inputData = new UserUpdateInputData(userId, userForm.getName());
+        var outputData = userUpdateUseCase.handle(inputData);
+        var dto = genUserDto(
+                outputData.getUserData().getId(),
+                outputData.getUserData().getName()
+        );
         return ResponseEntity.ok(dto);
     }
 
