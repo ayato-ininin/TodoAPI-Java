@@ -20,8 +20,8 @@ application {
 
 run {
 	// 環境変数の設定
-//	environment 'SPRING_PROFILES_ACTIVE', 'dev'
-	environment 'SPRING_PROFILES_ACTIVE', 'prod'
+	environment 'SPRING_PROFILES_ACTIVE', 'dev'
+//	environment 'SPRING_PROFILES_ACTIVE', 'prod'
 }
 
 configurations {

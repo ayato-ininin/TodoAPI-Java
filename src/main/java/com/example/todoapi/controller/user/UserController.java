@@ -2,7 +2,6 @@ package com.example.todoapi.controller.user;
 
 import com.example.todoapi.controller.UsersApi;
 import com.example.todoapi.model.*;
-import com.example.todoapi.usecase.task.delete.TaskDeleteInputData;
 import com.example.todoapi.usecase.user.create.UserCreateInputData;
 import com.example.todoapi.usecase.user.create.UserCreateUseCase;
 import com.example.todoapi.usecase.user.delete.UserDeleteInputData;
