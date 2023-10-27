@@ -4,6 +4,8 @@ import com.example.todoapi.controller.UsersApi;
 import com.example.todoapi.model.*;
 import com.example.todoapi.usecase.user.create.UserCreateInputData;
 import com.example.todoapi.usecase.user.create.UserCreateUseCase;
+import com.example.todoapi.usecase.user.getDetail.UserGetDetailInputData;
+import com.example.todoapi.usecase.user.getDetail.UserGetDetailUseCase;
 import com.example.todoapi.usecase.user.getList.UserGetListInputData;
 import com.example.todoapi.usecase.user.getList.UserGetListUseCase;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,29 @@ public class UserController implements UsersApi {
 
     private final UserCreateUseCase userCreateUseCase;
     private final UserGetListUseCase userGetListUseCase;
+    private final UserGetDetailUseCase userGetDetailUseCase;
 
     public UserController(
             UserCreateUseCase userCreateUseCase,
-            UserGetListUseCase userGetListUseCase
+            UserGetListUseCase userGetListUseCase,
+            UserGetDetailUseCase userGetDetailUseCase
     ) {
         this.userCreateUseCase = userCreateUseCase;
         this.userGetListUseCase = userGetListUseCase;
+        this.userGetDetailUseCase = userGetDetailUseCase;
+    }
+
+    @Override
+    public ResponseEntity<UserDTO> userDetail(Long taskId) {
+        UserGetDetailInputData inputData = new UserGetDetailInputData(taskId);
+        var outputData = userGetDetailUseCase.handle(inputData);
+        if (outputData.getUserData().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var dto = outputData.getUserData()
+                .map(t -> genUserDto(t.getId(), t.getName()))
+                .get();
+        return ResponseEntity.ok(dto);
     }
 
     @Override
