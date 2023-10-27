@@ -1,6 +1,6 @@
 package com.example.todoapi.domain.applicationService.user;
 
-import com.example.todoapi.domain.applicationService.task.common.TaskEntityNotFoundException;
+import com.example.todoapi.domain.applicationService.user.common.UserEntityNotFoundException;
 import com.example.todoapi.domain.model.user.UserEntity;
 import com.example.todoapi.domain.model.user.UserName;
 import com.example.todoapi.domain.model.user.UserRepository;
@@ -24,7 +24,7 @@ public class UserUpdateInteractor implements UserUpdateUseCase {
 	@Override
 	public UserUpdateOutputData handle(UserUpdateInputData inputData) {
 		UserEntity userEntity = userRepository.find(inputData.getId())
-				.orElseThrow(() -> new TaskEntityNotFoundException(inputData.getId()));
+				.orElseThrow(() -> new UserEntityNotFoundException(inputData.getId()));
 		UserName name = new UserName(inputData.getName());
 		userEntity.changeName(name);
 		userRepository.update(userEntity);

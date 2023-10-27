@@ -2,9 +2,11 @@ package com.example.todoapi.controller.user;
 
 import com.example.todoapi.controller.UsersApi;
 import com.example.todoapi.model.*;
-import com.example.todoapi.usecase.task.update.TaskUpdateInputData;
+import com.example.todoapi.usecase.task.delete.TaskDeleteInputData;
 import com.example.todoapi.usecase.user.create.UserCreateInputData;
 import com.example.todoapi.usecase.user.create.UserCreateUseCase;
+import com.example.todoapi.usecase.user.delete.UserDeleteInputData;
+import com.example.todoapi.usecase.user.delete.UserDeleteUseCase;
 import com.example.todoapi.usecase.user.getDetail.UserGetDetailInputData;
 import com.example.todoapi.usecase.user.getDetail.UserGetDetailUseCase;
 import com.example.todoapi.usecase.user.getList.UserGetListInputData;
@@ -24,17 +26,20 @@ public class UserController implements UsersApi {
     private final UserGetListUseCase userGetListUseCase;
     private final UserGetDetailUseCase userGetDetailUseCase;
     private final UserUpdateUseCase userUpdateUseCase;
+    private final UserDeleteUseCase userDeleteUseCase;
 
     public UserController(
             UserCreateUseCase userCreateUseCase,
             UserGetListUseCase userGetListUseCase,
             UserGetDetailUseCase userGetDetailUseCase,
-            UserUpdateUseCase userUpdateUseCase
+            UserUpdateUseCase userUpdateUseCase,
+            UserDeleteUseCase userDeleteUseCase
     ) {
         this.userCreateUseCase = userCreateUseCase;
         this.userGetListUseCase = userGetListUseCase;
         this.userGetDetailUseCase = userGetDetailUseCase;
         this.userUpdateUseCase = userUpdateUseCase;
+        this.userDeleteUseCase = userDeleteUseCase;
     }
 
     @Override
@@ -87,6 +92,13 @@ public class UserController implements UsersApi {
                 outputData.getUserData().getName()
         );
         return ResponseEntity.ok(dto);
+    }
+
+    @Override
+    public ResponseEntity<Void> userDelete(Long userId) {
+        UserDeleteInputData inputData = new UserDeleteInputData(userId);
+        userDeleteUseCase.handle(inputData);
+        return ResponseEntity.noContent().build();
     }
 
     private static UserDTO genUserDto(long id, String name) {
