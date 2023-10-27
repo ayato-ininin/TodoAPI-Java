@@ -1,0 +1,16 @@
+{
+    "users": [
+        {
+            "id" : "1",
+            "name" : "stubListUser-1"
+        },
+        {
+            "id" : "2",
+            "name" : "stubListUser-2"
+        },
+        {
+            "id" : "3",
+            "name" : "stubListUser-3"
+        }
+    ]
+}
