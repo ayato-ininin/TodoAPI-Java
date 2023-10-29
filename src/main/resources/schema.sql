@@ -5,7 +5,8 @@ CREATE TABLE samples (
 
 CREATE TABLE tasks (
     id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL
+    title VARCHAR(255) NOT NULL,
+    assignedUserList VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE users (
