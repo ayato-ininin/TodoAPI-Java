@@ -1,8 +1,10 @@
 {
     "id" : "9999",
-    "title" : "stubCreateTest-1"
+    "title" : "stubCreateTest-1",
+    "assignedUserList": [1, 2]
 }
 {
     "id" : "99999",
-    "title" : "stubCreateTest-2"
+    "title" : "stubCreateTest-2",
+    "assignedUserList": [3, 4]
 }

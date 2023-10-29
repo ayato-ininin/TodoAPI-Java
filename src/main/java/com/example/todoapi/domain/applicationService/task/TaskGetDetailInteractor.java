@@ -1,5 +1,6 @@
 package com.example.todoapi.domain.applicationService.task;
 
+import com.example.todoapi.domain.applicationService.task.common.ConvertEntity;
 import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.domain.model.task.TaskRepository;
 import com.example.todoapi.usecase.task.common.TaskData;
@@ -17,18 +18,20 @@ import java.util.Optional;
 @Profile("prod")
 public class TaskGetDetailInteractor implements TaskGetDetailUseCase {
     private final TaskRepository taskRepository;
+    private final ConvertEntity convertEntity;
     @Autowired
-    public TaskGetDetailInteractor(TaskRepository taskRepository) {
+    public TaskGetDetailInteractor(
+            TaskRepository taskRepository,
+            ConvertEntity convertEntity
+    ) {
         this.taskRepository = taskRepository;
+        this.convertEntity = convertEntity;
     }
     @Override
     public TaskGetDetailOutputData handle(TaskGetDetailInputData inputData) {
         Optional<TaskEntity> taskEntity = taskRepository.find(inputData.getId());
         Optional<TaskData> taskData = taskEntity
-                .map(t -> new TaskData(
-                        t.getId().getValue(),
-                        t.getTitle().getValue())
-                );
+                .map(convertEntity::convertTaskData);
         return new TaskGetDetailOutputData(taskData);
     }
 }

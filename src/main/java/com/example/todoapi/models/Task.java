@@ -5,10 +5,12 @@ package com.example.todoapi.models;
 public class Task {
     private long id;
     private String title;
+    private String assignedUserList;// カンマ区切り
 
-    public Task(long id, String title) {
+    public Task(long id, String title, String assignedUserList) {
         this.id = id;
         this.title = title;
+        this.assignedUserList = assignedUserList;
     }
 
     public long getId() {
@@ -17,5 +19,9 @@ public class Task {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getAssignedUserList() {
+        return assignedUserList;
     }
 }

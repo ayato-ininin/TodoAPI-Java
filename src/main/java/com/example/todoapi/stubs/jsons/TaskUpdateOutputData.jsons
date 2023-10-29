@@ -1,12 +1,14 @@
 {
     "taskData": {
         "id" : "9999",
-        "title" : "stubUpdateTest-1"
+        "title" : "stubUpdateTest-1",
+        "assignedUserList": [1, 2]
     }
 }
 {
     "taskData": {
         "id" : "99999",
-        "title" : "stubUpdateTest-2"
+        "title" : "stubUpdateTest-2",
+        "assignedUserList": [3, 4]
     }
 }

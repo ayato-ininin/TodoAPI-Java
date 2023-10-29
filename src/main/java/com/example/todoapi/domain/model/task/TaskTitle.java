@@ -1,6 +1,6 @@
 package com.example.todoapi.domain.model.task;
 
-// 値オブジェクト
+// 値オブジェクト(ルールの集約)
 public class TaskTitle {
     private String value;
 

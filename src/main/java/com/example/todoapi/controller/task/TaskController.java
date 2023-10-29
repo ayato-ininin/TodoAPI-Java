@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -54,16 +55,19 @@ public class TaskController implements TasksApi {
             return ResponseEntity.notFound().build();
         }
         var dto = outputData.getTaskData()
-                .map(t -> genTaskDto(t.getId(), t.getTitle()))
+                .map(t -> genTaskDto(t.getId(), t.getTitle(), t.getAssignedUserList()))
                 .get();
         return ResponseEntity.ok(dto);
     }
 
     @Override
     public ResponseEntity<TaskDTO> create(TaskForm taskForm) {
-        TaskCreateInputData inputData = new TaskCreateInputData(taskForm.getTitle());
+        TaskCreateInputData inputData =
+                new TaskCreateInputData(
+                        taskForm.getTitle(),
+                        taskForm.getAssignedUserList());
         var outputData = taskCreateUseCase.handle(inputData);
-        var dto = genTaskDto(outputData.getId(), outputData.getTitle());
+        var dto = genTaskDto(outputData.getId(), outputData.getTitle(), outputData.getAssignedUserList());
         return ResponseEntity
                 .created(URI.create("/tasks/" + outputData.getId()))
                 .body(dto);
@@ -74,7 +78,7 @@ public class TaskController implements TasksApi {
         TaskGetListInputData inputData = new TaskGetListInputData(limit, offset);
         var outputData = taskGetListUseCase.handle(inputData);
         var dtoList = outputData.getTasks().stream()
-                .map(task -> genTaskDto(task.getId(), task.getTitle()))
+                .map(task -> genTaskDto(task.getId(), task.getTitle(), task.getAssignedUserList()))
                 .collect(Collectors.toList());
         var pageDTO = new PageDto();
         pageDTO.setLimit(limit);
@@ -89,11 +93,17 @@ public class TaskController implements TasksApi {
 
     @Override
     public ResponseEntity<TaskDTO> update(Long taskId, TaskForm taskForm) {
-        TaskUpdateInputData inputData = new TaskUpdateInputData(taskId, taskForm.getTitle());
+        TaskUpdateInputData inputData =
+                new TaskUpdateInputData(
+                        taskId,
+                        taskForm.getTitle(),
+                        taskForm.getAssignedUserList()
+                );
         var outputData = taskUpdateUseCase.handle(inputData);
         var dto = genTaskDto(
                 outputData.getTaskData().getId(),
-                outputData.getTaskData().getTitle()
+                outputData.getTaskData().getTitle(),
+                outputData.getTaskData().getAssignedUserList()
         );
         return ResponseEntity.ok(dto);
     }
@@ -105,10 +115,11 @@ public class TaskController implements TasksApi {
         return ResponseEntity.noContent().build();
     }
 
-    private static TaskDTO genTaskDto(long id, String title) {
+    private static TaskDTO genTaskDto(long id, String title, List<Long> assignedUserList) {
         var dto = new TaskDTO();
         dto.setId(id);
         dto.setTitle(title);
+        dto.setAssignedUserList(assignedUserList);
         return dto;
     }
 }

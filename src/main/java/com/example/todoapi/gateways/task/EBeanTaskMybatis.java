@@ -1,6 +1,5 @@
 package com.example.todoapi.gateways.task;
 
-import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.models.Task;
 import org.apache.ibatis.annotations.*;
 
@@ -13,22 +12,22 @@ import java.util.Optional;
 @Mapper
 public interface EBeanTaskMybatis {
 
-    @Select("SELECT id, title FROM tasks WHERE id = #{taskId}")
+    @Select("SELECT id, title, assignedUserList FROM tasks WHERE id = #{taskId}")
     Optional<Task> find(long taskId);
 
-    @Select("SELECT id, title FROM tasks LIMIT #{limit} OFFSET #{offset}")
+    @Select("SELECT id, title, assignedUserList FROM tasks LIMIT #{limit} OFFSET #{offset}")
     List<Task> findAll(int limit, long offset);
 
     // optionsで自動採番したIDを取得、セットできる
     // mybatisの制限で更新後の値を取得できないので、voidになってしまう
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO tasks (id, title) VALUES (#{id.value}, #{title.value})")
-    void insert(TaskEntity taskEntity);
+    @Insert("INSERT INTO tasks (id, title, assignedUserList) VALUES (#{id}, #{title}, #{assignedUserList})")
+    void insert(Task task);
 
     // mybatisの制限で更新後の値を取得できないので、voidになってしまう
     // 更新後の値は別途取得する必要がある
-    @Update("UPDATE tasks SET title = #{title.value} WHERE id = #{id.value}")
-    void update(TaskEntity taskEntity);
+    @Update("UPDATE tasks SET title = #{title}, assignedUserList = #{assignedUserList} WHERE id = #{id}")
+    void update(Task task);
 
     @Delete("DELETE FROM tasks WHERE id = #{taskId}")
     void delete(Long taskId);
