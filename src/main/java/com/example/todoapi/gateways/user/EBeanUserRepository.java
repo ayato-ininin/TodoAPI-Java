@@ -1,4 +1,4 @@
-package com.example.todoapi.gateways.task;
+package com.example.todoapi.gateways.user;
 
 import com.example.todoapi.domain.model.user.UserEntity;
 import com.example.todoapi.domain.model.user.UserId;
