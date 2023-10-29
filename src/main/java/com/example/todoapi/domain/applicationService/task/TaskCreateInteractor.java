@@ -1,7 +1,6 @@
 package com.example.todoapi.domain.applicationService.task;
 
 import com.example.todoapi.domain.applicationService.task.common.ConvertEntity;
-import com.example.todoapi.domain.applicationService.task.common.TaskSpecificationException;
 import com.example.todoapi.domain.model.task.TaskEntity;
 import com.example.todoapi.domain.model.task.TaskId;
 import com.example.todoapi.domain.model.task.TaskRepository;
