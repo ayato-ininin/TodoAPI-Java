@@ -354,8 +354,16 @@ components:
           description: "タスクタイトル"
           maxLength: 256
           minLength: 1
+        assignedUserList:
+          type: array
+          description: "アサインするユーザIDリスト"
+          items:
+            type: integer
+            format: int64
+          example: [ "123", "456" ]
       required:
         - title
+        - assignedUserList
     TaskDTO:
       # レスポンスボディのjson Schema定義
       type: object
@@ -367,9 +375,17 @@ components:
         title:
           type: string
           description: "タスクタイトル"
+        assignedUserList:
+          type: array
+          description: "アサインするユーザIDリスト"
+          items:
+            type: integer
+            format: int64
+          example: [ "123", "456" ]
       required:
         - id
         - title
+        - assignedUserList
     PageDto:
       description: "ページング情報"
       type: object
